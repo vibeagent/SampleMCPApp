@@ -1,8 +1,11 @@
 import asyncio
 import os
 import sys
-import google.generativeai as genai
+import google.genai as genai
 from MCPClient import MCPClient
+
+GEMINI_MODEL = "gemini-2.5-flash"
+MCP_SERVER_SCRIPT = "MCPServer.py"
 
 async def main():
     # 1. Setup Gemini
@@ -13,7 +16,7 @@ async def main():
         sys.exit(1)
         
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel(GEMINI_MODEL)
 
     # 2. Get the directory path from the user (or use current directory)
     path_to_read = input("Enter the path to read (default is '.'): ").strip()
@@ -22,7 +25,7 @@ async def main():
 
     # 3. Read the directory using MCP
     print(f"\n--- 1. Connecting to MCP Server and reading '{path_to_read}' ---")
-    client = MCPClient("MCPServer.py")
+    client = MCPClient(MCP_SERVER_SCRIPT)
     try:
         await client.connect()
         directory_contents = await client.list_directory(path_to_read)
